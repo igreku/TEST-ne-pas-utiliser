@@ -1,0 +1,2116 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitPulse Pro - Suivi d'Entraînement Sport & Musculation</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        slate: {
+                            950: '#020617',
+                            900: '#0f172a',
+                            800: '#1e293b',
+                            700: '#334155'
+                        },
+                        emerald: {
+                            400: '#34d399',
+                            500: '#10b981',
+                            600: '#059669'
+                        },
+                        cyan: {
+                            400: '#22d3ee',
+                            500: '#06b6d4'
+                        },
+                        violet: {
+                            500: '#8b5cf6',
+                            600: '#7c3aed'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #020617; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col selection:bg-emerald-500 selection:text-slate-950">
+
+    <!-- Header & Navigation -->
+    <header class="sticky top-0 z-50 bg-slate-900/90 backdrop-blur-md border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo -->
+                <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('programmes')">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-500 to-cyan-500 flex items-center justify-center shadow-lg shadow-emerald-500/20">
+                        <i class="fa-solid fa-bolt-lightning text-slate-950 text-xl font-bold"></i>
+                    </div>
+                    <div>
+                        <span class="text-xl font-extrabold tracking-tight bg-gradient-to-r from-emerald-400 via-cyan-400 to-violet-500 bg-clip-text text-transparent">FitPulse Pro</span>
+                        <span class="block text-[10px] text-slate-400 font-medium uppercase tracking-widest">Training & Performance</span>
+                    </div>
+                </div>
+
+                <!-- Desktop Navigation Tabs -->
+                <nav class="hidden md:flex space-x-1">
+                    <button onclick="switchTab('programmes')" id="nav-btn-programmes" class="nav-btn px-3.5 py-2 rounded-lg text-sm font-medium transition-all duration-200 text-emerald-400 bg-emerald-500/10 border border-emerald-500/20">
+                        <i class="fa-solid fa-dumbbell mr-2"></i>Programmes
+                    </button>
+                    <button onclick="switchTab('generateur')" id="nav-btn-generateur" class="nav-btn px-3.5 py-2 rounded-lg text-sm font-medium transition-all duration-200 text-slate-400 hover:text-slate-200 hover:bg-slate-800">
+                        <i class="fa-solid fa-wand-magic-sparkles mr-2"></i>Générateur
+                    </button>
+                    <button onclick="switchTab('seance')" id="nav-btn-seance" class="nav-btn px-3.5 py-2 rounded-lg text-sm font-medium transition-all duration-200 text-slate-400 hover:text-slate-200 hover:bg-slate-800 relative">
+                        <i class="fa-solid fa-stopwatch mr-2"></i>Séance
+                        <span id="active-badge" class="hidden absolute -top-1 -right-1 w-3 h-3 bg-emerald-500 rounded-full animate-ping"></span>
+                    </button>
+                    <button onclick="switchTab('records')" id="nav-btn-records" class="nav-btn px-3.5 py-2 rounded-lg text-sm font-medium transition-all duration-200 text-slate-400 hover:text-slate-200 hover:bg-slate-800">
+                        <i class="fa-solid fa-trophy mr-2"></i>Records
+                    </button>
+                    <button onclick="switchTab('historique')" id="nav-btn-historique" class="nav-btn px-3.5 py-2 rounded-lg text-sm font-medium transition-all duration-200 text-slate-400 hover:text-slate-200 hover:bg-slate-800">
+                        <i class="fa-solid fa-clock-rotate-left mr-2"></i>Historique
+                    </button>
+                    <button onclick="switchTab('reglages')" id="nav-btn-reglages" class="nav-btn px-3.5 py-2 rounded-lg text-sm font-medium transition-all duration-200 text-slate-400 hover:text-slate-200 hover:bg-slate-800">
+                        <i class="fa-solid fa-gear mr-2"></i>Réglages
+                    </button>
+                </nav>
+
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="mobile-menu" class="p-2 rounded-lg bg-slate-800 text-slate-300 hover:text-white">
+                        <i class="fa-solid fa-bars text-lg"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation Menu -->
+        <div id="mobile-menu" class="hidden md:hidden px-4 pt-2 pb-4 space-y-1 bg-slate-900 border-b border-slate-800">
+            <button data-tab="programmes" onclick="switchTab('programmes')" class="mobile-nav-btn w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-emerald-400 bg-emerald-500/10">
+                <i class="fa-solid fa-dumbbell mr-2"></i>Programmes
+            </button>
+            <button data-tab="generateur" onclick="switchTab('generateur')" class="mobile-nav-btn w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-slate-300 hover:bg-slate-800">
+                <i class="fa-solid fa-wand-magic-sparkles mr-2"></i>Générateur
+            </button>
+            <button data-tab="seance" onclick="switchTab('seance')" class="mobile-nav-btn w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-slate-300 hover:bg-slate-800">
+                <i class="fa-solid fa-stopwatch mr-2"></i>Séance Active
+            </button>
+            <button data-tab="records" onclick="switchTab('records')" class="mobile-nav-btn w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-slate-300 hover:bg-slate-800">
+                <i class="fa-solid fa-trophy mr-2"></i>Records
+            </button>
+            <button data-tab="historique" onclick="switchTab('historique')" class="mobile-nav-btn w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-slate-300 hover:bg-slate-800">
+                <i class="fa-solid fa-clock-rotate-left mr-2"></i>Historique
+            </button>
+            <button data-tab="reglages" onclick="switchTab('reglages')" class="mobile-nav-btn w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-slate-300 hover:bg-slate-800">
+                <i class="fa-solid fa-gear mr-2"></i>Réglages
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+        <!-- ================= 1. ONGLET PROGRAMMES ================= -->
+        <section id="tab-programmes" class="tab-content space-y-6">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                    <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-white">Programmes d'Entraînement</h1>
+                    <p class="text-sm text-slate-400 mt-1">Choisissez un programme ou un WOD certifié pour lancer votre séance instantanément.</p>
+                </div>
+                <!-- Filtres -->
+                <div class="flex flex-wrap gap-2" id="program-filters">
+                    <button onclick="filterPrograms('Tous')" class="filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-emerald-500 text-slate-950 transition-all shadow-md shadow-emerald-500/20">Tous</button>
+                    <button onclick="filterPrograms('Hyrox')" class="filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all">Hyrox</button>
+                    <button onclick="filterPrograms('CrossFit / WODs')" class="filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all">CrossFit / WODs</button>
+                    <button onclick="filterPrograms('Force')" class="filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all">Force</button>
+                    <button onclick="filterPrograms('Poids de corps')" class="filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all">Poids de corps</button>
+                    <button onclick="filterPrograms('Personnalisés')" class="filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all">Personnalisés</button>
+                </div>
+            </div>
+
+            <!-- Grille des Programmes -->
+            <div id="programs-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Rempli dynamiquement par JS -->
+            </div>
+        </section>
+
+        <!-- ================= 2. ONGLET GÉNÉRATEUR ================= -->
+        <section id="tab-generateur" class="tab-content hidden space-y-6">
+            <div>
+                <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-white">Générateur d'Entraînement Intelligent</h1>
+                <p class="text-sm text-slate-400 mt-1">Créez des progressions scientifiques pour vos tractions, pompes ou composez une séance sur mesure optimisée biomécaniquement.</p>
+            </div>
+
+            <!-- Sous-onglets Générateur -->
+            <div class="flex border-b border-slate-800 space-x-4 overflow-x-auto">
+                <button onclick="switchGenSubTab('tractions')" id="gen-tab-btn-tractions" class="gen-tab-btn whitespace-nowrap pb-3 text-sm font-semibold border-b-2 border-emerald-500 text-emerald-400">
+                    <i class="fa-solid fa-arrows-up-to-line mr-2"></i>Tractions (Russian Fighter)
+                </button>
+                <button onclick="switchGenSubTab('pompes')" id="gen-tab-btn-pompes" class="gen-tab-btn whitespace-nowrap pb-3 text-sm font-semibold border-b-2 border-transparent text-slate-400 hover:text-slate-200">
+                    <i class="fa-solid fa-person-arrow-down mr-2"></i>Pompes (Volume & Densité)
+                </button>
+                <button onclick="switchGenSubTab('mesure')" id="gen-tab-btn-mesure" class="gen-tab-btn whitespace-nowrap pb-3 text-sm font-semibold border-b-2 border-transparent text-slate-400 hover:text-slate-200">
+                    <i class="fa-solid fa-list-check mr-2"></i>Séance Sur Mesure
+                </button>
+            </div>
+
+            <!-- Contenu Sous-onglet Tractions -->
+            <div id="gen-sub-tractions" class="gen-sub-content bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-6">
+                <div class="max-w-md space-y-4">
+                    <h2 class="text-lg font-bold text-white">Programme de Progression Tractions</h2>
+                    <p class="text-xs text-slate-400">Basé sur le protocole Russian Fighter Pull-up Program. Idéal pour exploser son max de tractions strictes.</p>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-300 mb-1">Mon Max Actuel de Tractions</label>
+                        <input type="number" id="gen-pullup-max" value="8" min="1" max="50" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-4 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500">
+                    </div>
+                    <button onclick="generatePullupProgram()" class="w-full bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold py-2.5 rounded-lg text-sm transition-all shadow-lg shadow-emerald-500/20">
+                        Générer le programme
+                    </button>
+                </div>
+                <div id="gen-pullup-result" class="hidden border-t border-slate-800 pt-6 space-y-4">
+                    <!-- Résultat injecté -->
+                </div>
+            </div>
+
+            <!-- Contenu Sous-onglet Pompes -->
+            <div id="gen-sub-pompes" class="gen-sub-content hidden bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-6">
+                <div class="max-w-md space-y-4">
+                    <h2 class="text-lg font-bold text-white">Programme de Volume & Densité (Pompes)</h2>
+                    <p class="text-xs text-slate-400">Développez l'endurance et la masse pectorale grâce à une surcharge progressive par paliers.</p>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-300 mb-1">Mon Max Actuel de Pompes</label>
+                        <input type="number" id="gen-pushup-max" value="20" min="5" max="150" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-4 py-2.5 text-sm text-white focus:outline-none focus:border-cyan-500">
+                    </div>
+                    <button onclick="generatePushupProgram()" class="w-full bg-cyan-500 hover:bg-cyan-600 text-slate-950 font-bold py-2.5 rounded-lg text-sm transition-all shadow-lg shadow-cyan-500/20">
+                        Générer le programme
+                    </button>
+                </div>
+                <div id="gen-pushup-result" class="hidden border-t border-slate-800 pt-6 space-y-4">
+                    <!-- Résultat injecté -->
+                </div>
+            </div>
+
+            <!-- Contenu Sous-onglet Sur Mesure -->
+            <div id="gen-sub-mesure" class="gen-sub-content hidden bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-6">
+                <div>
+                    <h2 class="text-lg font-bold text-white">Créateur de Séance Biomécanique</h2>
+                    <p class="text-xs text-slate-400 mt-1">Sélectionnez vos exercices. Le moteur réorganisera automatiquement la séance selon l'ordre biomécanique strict : 1. SNC Lourd, 2. Polyarticulaires, 3. Isolation, 4. Core/Abdos.</p>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 pt-2" id="custom-exercises-list">
+                    <!-- Injecté par JS avec data-cat -->
+                </div>
+
+                <div class="pt-4 border-t border-slate-800 flex justify-end">
+                    <button onclick="generateCustomWorkout()" class="bg-gradient-to-r from-emerald-500 to-cyan-500 text-slate-950 font-bold px-6 py-3 rounded-xl text-sm shadow-lg hover:opacity-95 transition-all">
+                        <i class="fa-solid fa-wand-magic-sparkles mr-2"></i>Générer la séance optimisée
+                    </button>
+                </div>
+
+                <div id="custom-workout-result" class="hidden border-t border-slate-800 pt-6 space-y-4">
+                    <!-- Résultat de la séance sur mesure -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= 3. ONGLET SÉANCE ACTIVE ================= -->
+        <section id="tab-seance" class="tab-content hidden space-y-6">
+            <div id="no-active-seance" class="bg-slate-900 border border-slate-800 rounded-2xl p-10 text-center space-y-4 shadow-xl">
+                <div class="w-16 h-16 bg-slate-800 rounded-2xl flex items-center justify-center mx-auto text-slate-400 text-2xl">
+                    <i class="fa-solid fa-stopwatch"></i>
+                </div>
+                <h2 class="text-xl font-bold text-white">Aucune séance active</h2>
+                <p class="text-sm text-slate-400 max-w-md mx-auto">Sélectionnez un programme dans l'onglet <span class="text-emerald-400 font-semibold">Programmes</span> ou importez une séance générée pour commencer votre entraînement.</p>
+                <button onclick="switchTab('programmes')" class="inline-flex items-center px-4 py-2 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold rounded-xl text-sm transition-all shadow-lg shadow-emerald-500/20">
+                    <i class="fa-solid fa-dumbbell mr-2"></i>Voir les programmes
+                </button>
+            </div>
+
+            <!-- Conteneur Séance Active en cours -->
+            <div id="active-seance-container" class="hidden space-y-6">
+                <!-- En-tête Séance & Minuteur / Chrono -->
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div>
+                        <span id="active-workout-category" class="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 mb-2"></span>
+                        <h1 id="active-workout-title" class="text-2xl font-bold text-white">Nom du programme</h1>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <!-- Affichage Minuteur AMRAP ou Chrono Global -->
+                        <div class="bg-slate-950 border border-slate-800 px-5 py-3 rounded-xl flex items-center space-x-3">
+                            <i id="timer-icon" class="fa-solid fa-stopwatch text-emerald-400 text-xl"></i>
+                            <div>
+                                <span id="timer-label" class="block text-[10px] text-slate-400 uppercase tracking-widest font-semibold">Chrono Séance</span>
+                                <span id="global-timer-display" class="text-2xl font-black font-mono text-white tracking-wider">00:00</span>
+                            </div>
+                        </div>
+                        <!-- Boutons Action Global -->
+                        <div class="flex gap-2">
+                            <button id="start-chrono-btn" onclick="toggleSessionRunning()" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold px-5 py-3 rounded-xl text-sm shadow-lg shadow-emerald-500/20 transition-all flex items-center">
+                                <i class="fa-solid fa-play mr-2"></i>Démarrer
+                            </button>
+                            <button onclick="cancelActiveWorkout()" class="bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 font-bold px-4 py-3 rounded-xl text-sm transition-all flex items-center" title="Abandonner la séance">
+                                <i class="fa-solid fa-xmark mr-1"></i>Abandonner
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Timer de Repos Flottant ou d'alerte -->
+                <div id="rest-timer-banner" class="hidden bg-cyan-950/80 border border-cyan-500/30 rounded-2xl p-4 shadow-xl flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-cyan-500/20 rounded-xl flex items-center justify-center text-cyan-400">
+                            <i class="fa-solid fa-hourglass-half fa-spin"></i>
+                        </div>
+                        <div>
+                            <span class="block text-xs text-cyan-300 font-semibold uppercase tracking-wider">Temps de Repos</span>
+                            <span id="rest-countdown-display" class="text-xl font-bold font-mono text-white">00:00</span>
+                        </div>
+                    </div>
+                    <button onclick="skipRestTimer()" class="px-3 py-1.5 bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 rounded-lg text-xs font-bold transition-all">
+                        Passer le repos
+                    </button>
+                </div>
+
+                <!-- Liste des exercices de la séance -->
+                <div id="active-exercises-list" class="space-y-4 opacity-50 pointer-events-none transition-all">
+                    <!-- Rempli par JS -->
+                </div>
+
+                <!-- Bouton Terminer la séance -->
+                <div class="pt-4 flex justify-end">
+                    <button id="finish-workout-btn" onclick="finishActiveWorkout()" disabled class="bg-slate-800 text-slate-500 font-bold px-8 py-3.5 rounded-xl text-sm transition-all cursor-not-allowed">
+                        <i class="fa-solid fa-check mr-2"></i>Terminer la séance
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= 4. ONGLET RECORDS ================= -->
+        <section id="tab-records" class="tab-content hidden space-y-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                    <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-white">Records Personnels (PRs)</h1>
+                    <p class="text-sm text-slate-400 mt-1">Suivez vos performances maximales sur les exercices clés.</p>
+                </div>
+                <button onclick="openAddRecordModal()" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold px-4 py-2.5 rounded-xl text-sm shadow-lg shadow-emerald-500/20 transition-all flex items-center self-start">
+                    <i class="fa-solid fa-plus mr-2"></i>Ajouter / Mettre à jour PR
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="records-grid">
+                <!-- Rempli par JS -->
+            </div>
+        </section>
+
+        <!-- ================= 5. ONGLET HISTORIQUE ================= -->
+        <section id="tab-historique" class="tab-content hidden space-y-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                    <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-white">Historique des Séances</h1>
+                    <p class="text-sm text-slate-400 mt-1">Retrouvez le journal de tous vos entraînements validés.</p>
+                </div>
+                <button onclick="clearHistory()" class="text-xs text-red-400 hover:text-red-300 font-semibold px-3 py-2 bg-red-500/10 border border-red-500/20 rounded-xl transition-all">
+                    <i class="fa-solid fa-trash mr-1"></i>Effacer l'historique
+                </button>
+            </div>
+
+            <div id="history-list" class="space-y-4">
+                <!-- Rempli par JS -->
+            </div>
+        </section>
+
+        <!-- ================= 6. ONGLET RÉGLAGES ================= -->
+        <section id="tab-reglages" class="tab-content hidden space-y-6">
+            <div>
+                <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-white">Réglages & Données</h1>
+                <p class="text-sm text-slate-400 mt-1">Sauvegardez, restaurez ou réinitialisez vos données stockées localement.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Export / Import -->
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
+                    <h2 class="text-lg font-bold text-white flex items-center">
+                        <i class="fa-solid fa-database text-emerald-400 mr-2"></i>Gestion des Données (JSON)
+                    </h2>
+                    <p class="text-xs text-slate-400">Exportez l'intégralité de vos programmes, records et historique pour sauvegarde, ou importez un fichier de données.</p>
+                    <div class="flex flex-wrap gap-3 pt-2">
+                        <button onclick="exportDataJson()" class="bg-slate-800 hover:bg-slate-700 text-white font-bold px-4 py-2.5 rounded-xl text-sm border border-slate-700 transition-all flex items-center">
+                            <i class="fa-solid fa-download mr-2"></i>Exporter JSON
+                        </button>
+                        <label class="bg-slate-800 hover:bg-slate-700 text-white font-bold px-4 py-2.5 rounded-xl text-sm border border-slate-700 transition-all cursor-pointer flex items-center">
+                            <i class="fa-solid fa-upload mr-2"></i>Importer JSON
+                            <input type="file" id="import-json-file" accept=".json" onchange="importDataJson(event)" class="hidden">
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Réinitialisation -->
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
+                    <h2 class="text-lg font-bold text-white flex items-center">
+                        <i class="fa-solid fa-triangle-exclamation text-red-400 mr-2"></i>Zone de Danger
+                    </h2>
+                    <p class="text-xs text-slate-400">Réinitialisez l'application aux valeurs d'usine (supprime tous les programmes personnalisés, l'historique et les records).</p>
+                    <div class="pt-2">
+                        <button onclick="resetAppToFactory()" class="bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 font-bold px-4 py-2.5 rounded-xl text-sm transition-all flex items-center">
+                            <i class="fa-solid fa-rotate-right mr-2"></i>Réinitialiser l'application
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Modal Ajout / Edition Record -->
+    <div id="record-modal" role="dialog" aria-modal="true" aria-labelledby="record-modal-title" onclick="if (event.target === this) closeAddRecordModal()" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
+            <div class="flex justify-between items-center">
+                <h3 id="record-modal-title" class="text-lg font-bold text-white">Ajouter / Mettre à jour un Record</h3>
+                <button onclick="closeAddRecordModal()" aria-label="Fermer" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs font-medium text-slate-300 mb-1">Nom de l'exercice</label>
+                    <input type="text" id="record-ex-name" maxlength="80" placeholder="Ex: Développé Couché" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-4 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-medium text-slate-300 mb-1">Poids max (kg)</label>
+                        <input type="number" id="record-ex-weight" min="0" step="any" inputmode="decimal" placeholder="Ex: 100" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-4 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-300 mb-1">Répétitions max</label>
+                        <input type="number" id="record-ex-reps" min="1" step="1" inputmode="numeric" placeholder="Ex: 5" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-4 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-300 mb-1">1RM Estimé (kg)</label>
+                    <input type="number" id="record-ex-onerm" min="0" step="any" inputmode="decimal" placeholder="Ex: 115 (auto si vide)" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-4 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500">
+                </div>
+            </div>
+            <div class="flex justify-end space-x-3 pt-2">
+                <button onclick="closeAddRecordModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-sm font-semibold transition-all">Annuler</button>
+                <button onclick="saveRecord()" class="px-5 py-2 bg-emerald-500 hover:bg-emerald-600 text-slate-950 rounded-xl text-sm font-bold shadow-lg shadow-emerald-500/20 transition-all">Enregistrer</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de confirmation (remplace window.confirm, souvent bloqué dans les aperçus intégrés) -->
+    <div id="confirm-modal" role="alertdialog" aria-modal="true" aria-labelledby="confirm-message" onclick="if (event.target === this) resolveConfirm(false)" class="fixed inset-0 z-[60] bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-sm w-full p-6 shadow-2xl space-y-5">
+            <p id="confirm-message" class="text-sm text-slate-200 whitespace-pre-line"></p>
+            <div class="flex justify-end space-x-3">
+                <button id="confirm-cancel-btn" onclick="resolveConfirm(false)" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-sm font-semibold transition-all">Annuler</button>
+                <button id="confirm-ok-btn" onclick="resolveConfirm(true)" class="px-5 py-2 bg-red-500 hover:bg-red-600 text-white rounded-xl text-sm font-bold transition-all">Confirmer</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" role="status" aria-live="polite" class="fixed bottom-6 right-6 max-w-[calc(100vw-3rem)] z-50 transform translate-y-20 opacity-0 transition-all duration-300 bg-slate-900 border border-slate-800 text-white px-5 py-3 rounded-2xl shadow-2xl flex items-center space-x-3">
+        <div id="toast-icon" class="text-emerald-400 text-lg"></div>
+        <div id="toast-msg" class="text-sm font-medium"></div>
+    </div>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // ================= SECURE ESCAPE HTML =================
+        function escapeHtml(str) {
+            if (typeof str !== 'string') return str;
+            return str.replace(/&/g, "&amp;")
+                      .replace(/</g, "&lt;")
+                      .replace(/>/g, "&gt;")
+                      .replace(/"/g, "&quot;")
+                      .replace(/'/g, "&#039;");
+        }
+
+        // ================= AUDIO SYNTHESIS (Web Audio API) =================
+        let audioCtx = null;
+        function playBeep(freq = 440, duration = 0.15) {
+            try {
+                if (!audioCtx) {
+                    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.value = freq;
+                gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + duration);
+            } catch (e) {
+                console.warn("Audio Context error:", e);
+            }
+        }
+
+        // ================= BASE DE DONNÉES INITIALES & ÉTAT =================
+        const DEFAULT_PROGRAMS = [
+            {
+                id: "prog-hyrox",
+                title: "Hyrox Race Simulation",
+                category: "Hyrox",
+                description: "Simulation officielle Hyrox complète avec alternance de course (1km) et ateliers spécifiques (Sled Push, Sled Pull, Farmers Carry, Sandbag Lunges, Wall Balls).",
+                exercises: [
+                    { name: "Course à pied", sets: 1, reps: "1000m", weight: "Poids du corps", rest: 0 },
+                    { name: "SkiErg", sets: 1, reps: "1000m", weight: "Poids du corps", rest: 0 },
+                    { name: "Course à pied", sets: 1, reps: "1000m", weight: "Poids du corps", rest: 0 },
+                    { name: "Sled Push", sets: 1, reps: "50m", weight: "152 kg", rest: 0 },
+                    { name: "Course à pied", sets: 1, reps: "1000m", weight: "Poids du corps", rest: 0 },
+                    { name: "Sled Pull", sets: 1, reps: "50m", weight: "103 kg", rest: 0 },
+                    { name: "Course à pied", sets: 1, reps: "1000m", weight: "Poids du corps", rest: 0 },
+                    { name: "Burpee Broad Jumps", sets: 1, reps: "80m", weight: "Poids du corps", rest: 0 },
+                    { name: "Course à pied", sets: 1, reps: "1000m", weight: "Poids du corps", rest: 0 },
+                    { name: "Rowing", sets: 1, reps: "1000m", weight: "Poids du corps", rest: 0 },
+                    { name: "Course à pied", sets: 1, reps: "1000m", weight: "Poids du corps", rest: 0 },
+                    { name: "Farmers Carry", sets: 1, reps: "200m", weight: "2 x 24 kg", rest: 0 },
+                    { name: "Course à pied", sets: 1, reps: "1000m", weight: "Poids du corps", rest: 0 },
+                    { name: "Sandbag Lunges", sets: 1, reps: "100m", weight: "20 kg", rest: 0 },
+                    { name: "Course à pied", sets: 1, reps: "1000m", weight: "Poids du corps", rest: 0 },
+                    { name: "Wall Balls", sets: 1, reps: "100 reps", weight: "6 kg", rest: 0 }
+                ]
+            },
+            {
+                id: "prog-demi-hyrox",
+                title: "Demi-Hyrox Express",
+                category: "Hyrox",
+                description: "Version courte et intense alternant course et ateliers spécifiques.",
+                exercises: [
+                    { name: "Course à pied", sets: 1, reps: "500m", weight: "Poids du corps", rest: 0 },
+                    { name: "SkiErg", sets: 1, reps: "500m", weight: "Poids du corps", rest: 0 },
+                    { name: "Course à pied", sets: 1, reps: "500m", weight: "Poids du corps", rest: 0 },
+                    { name: "Sled Push", sets: 1, reps: "25m", weight: "152 kg", rest: 0 },
+                    { name: "Course à pied", sets: 1, reps: "500m", weight: "Poids du corps", rest: 0 },
+                    { name: "Sled Pull", sets: 1, reps: "25m", weight: "103 kg", rest: 0 },
+                    { name: "Course à pied", sets: 1, reps: "500m", weight: "Poids du corps", rest: 0 },
+                    { name: "Farmers Carry", sets: 1, reps: "100m", weight: "2 x 24 kg", rest: 0 },
+                    { name: "Course à pied", sets: 1, reps: "500m", weight: "Poids du corps", rest: 0 },
+                    { name: "Wall Balls", sets: 1, reps: "50 reps", weight: "6 kg", rest: 0 }
+                ]
+            },
+            {
+                id: "prog-fran",
+                title: "WOD Benchmark - Fran",
+                category: "CrossFit / WODs",
+                description: "Le classique absolu du CrossFit. 21-15-9 répétitions de Thrusters et Pull-ups. Repos 0s obligatoire !",
+                exercises: [
+                    { name: "Thrusters (21-15-9)", sets: 3, reps: "21 / 15 / 9", weight: "43 kg", rest: 0 },
+                    { name: "Pull-ups (21-15-9)", sets: 3, reps: "21 / 15 / 9", weight: "Poids du corps", rest: 0 }
+                ]
+            },
+            {
+                id: "prog-cindy",
+                title: "WOD Benchmark - Cindy",
+                category: "CrossFit / WODs",
+                description: "AMRAP 20 minutes : 5 Pull-ups, 10 Push-ups, 15 Air Squats. Repos 0s.",
+                exercises: [
+                    { name: "Pull-ups", sets: 1, reps: "5 reps", weight: "Poids du corps", rest: 0 },
+                    { name: "Push-ups", sets: 1, reps: "10 reps", weight: "Poids du corps", rest: 0 },
+                    { name: "Air Squats", sets: 1, reps: "15 reps", weight: "Poids du corps", rest: 0 }
+                ]
+            },
+            {
+                id: "prog-murph",
+                title: "WOD Benchmark - Murph",
+                category: "CrossFit / WODs",
+                description: "1mile Run, 100 Pull-ups, 200 Push-ups, 300 Squats, 1mile Run. Repos 0s.",
+                exercises: [
+                    { name: "Course à pied", sets: 1, reps: "1 mile", weight: "Poids du corps", rest: 0 },
+                    { name: "Pull-ups", sets: 1, reps: "100 reps", weight: "Poids du corps", rest: 0 },
+                    { name: "Push-ups", sets: 1, reps: "200 reps", weight: "Poids du corps", rest: 0 },
+                    { name: "Air Squats", sets: 1, reps: "300 reps", weight: "Poids du corps", rest: 0 },
+                    { name: "Course à pied", sets: 1, reps: "1 mile", weight: "Poids du corps", rest: 0 }
+                ]
+            },
+            {
+                id: "prog-force-5x5",
+                title: "StrongLift 5x5 Force",
+                category: "Force",
+                description: "Programme de base pour développer la force pure sur les grands mouvements polyarticulaires.",
+                exercises: [
+                    { name: "Développé Couché", sets: 5, reps: "5", weight: "80 kg", pct: 75, rest: 120 },
+                    { name: "Squat Barre", sets: 5, reps: "5", weight: "100 kg", pct: 75, rest: 150 },
+                    { name: "Rowing Barre", sets: 5, reps: "5", weight: "70 kg", rest: 120 }
+                ]
+            },
+            {
+                id: "prog-bodyweight",
+                title: "Calisthenics Upper Body",
+                category: "Poids de corps",
+                description: "Séance complète au poids de corps haut du corps : tractions, dips, pompes et gainage.",
+                exercises: [
+                    { name: "Tractions Strictes", sets: 4, reps: "8-10", weight: "Poids du corps", rest: 90 },
+                    { name: "Dips aux Barres Parallèles", sets: 4, reps: "10-12", weight: "Poids du corps", rest: 90 },
+                    { name: "Pompes Diamant", sets: 3, reps: "12-15", weight: "Poids du corps", rest: 60 },
+                    { name: "Gainage Planche", sets: 3, reps: "45 sec", weight: "Poids du corps", rest: 45 }
+                ]
+            }
+        ];
+
+        const ALL_CUSTOM_EXERCISES_POOL = [
+            { id: "ex-1", name: "Développé Couché lourd", cat: "snc" },
+            { id: "ex-2", name: "Squat Arrière", cat: "snc" },
+            { id: "ex-3", name: "Soulevé de Terre (Deadlift)", cat: "snc" },
+            { id: "ex-4", name: "Développé Militaire", cat: "snc" },
+            { id: "ex-5", name: "Tractions lestées", cat: "poly", bw: true },
+            { id: "ex-6", name: "Dips", cat: "poly", bw: true },
+            { id: "ex-7", name: "Rowing Buste Penché", cat: "poly" },
+            { id: "ex-8", name: "Fentes Marchées", cat: "poly" },
+            { id: "ex-9", name: "Curl Biceps Haltères", cat: "iso" },
+            { id: "ex-10", name: "Extension Triceps Poulie", cat: "iso" },
+            { id: "ex-11", name: "Élévations Laterales", cat: "iso" },
+            { id: "ex-12", name: "Leg Extension", cat: "iso" },
+            { id: "ex-13", name: "Crunchs Abdominaux", cat: "core", bw: true },
+            { id: "ex-14", name: "Gainage Planche", cat: "core", bw: true },
+            { id: "ex-15", name: "Relevés de Jambes Suspendu", cat: "core" }
+        ];
+
+        let state = {
+            currentTab: 'programmes',
+            currentGenSubTab: 'tractions',
+            programFilter: 'Tous',
+            programs: [],
+            records: [],
+            history: [],
+            activeSession: null // { programId, title, category, exercises: [...], startTime, elapsedSeconds, timerInterval }
+        };
+
+        // ================= PERSISTENCE (LocalStorage) =================
+        const STORAGE_KEYS = {
+            programs: 'fitpulse_programs',
+            records: 'fitpulse_records',
+            history: 'fitpulse_history',
+            active: 'fitpulse_active_session'
+        };
+
+        const DEFAULT_RECORDS = [
+            { name: "Développé Couché", weight: 100, reps: 5, onerm: 115, bw: true },
+            { name: "Squat", weight: 130, reps: 3, onerm: 140 },
+            { name: "Soulevé de Terre", weight: 160, reps: 2, onerm: 170 },
+            { name: "Tractions", weight: "Poids du corps + 20kg", reps: 5, onerm: "N/A" }
+        ];
+
+        function deepClone(obj) {
+            return JSON.parse(JSON.stringify(obj));
+        }
+
+        // Lecture sécurisée : une donnée corrompue ne doit jamais bloquer l'application
+        function storageRead(key) {
+            try {
+                const raw = localStorage.getItem(key);
+                return raw === null ? null : JSON.parse(raw);
+            } catch (e) {
+                console.warn(`Données illisibles pour "${key}", valeurs par défaut utilisées.`, e);
+                return null;
+            }
+        }
+
+        let storageErrorShown = false;
+        function storageWrite(key, value) {
+            try {
+                localStorage.setItem(key, JSON.stringify(value));
+                return true;
+            } catch (e) {
+                console.warn(`Écriture impossible pour "${key}"`, e);
+                if (!storageErrorShown) {
+                    storageErrorShown = true;
+                    showToast("Sauvegarde impossible (stockage plein ou désactivé). Pensez à exporter vos données.", true);
+                }
+                return false;
+            }
+        }
+
+        // --- Validation / nettoyage des données (localStorage ET import JSON) ---
+        function toBoundedInt(value, min, max, fallback) {
+            const n = Number(value);
+            if (value === null || value === '' || !Number.isFinite(n)) return fallback;
+            return Math.min(Math.max(Math.round(n), min), max);
+        }
+
+        function sanitizeExercise(ex) {
+            if (!ex || typeof ex !== 'object') return null;
+            const name = String(ex.name ?? '').trim();
+            if (!name) return null;
+            const out = {
+                name: name.slice(0, 120),
+                sets: toBoundedInt(ex.sets, 1, 20, 3),
+                reps: String(ex.reps ?? '').slice(0, 40),
+                weight: String(ex.weight ?? 'Poids du corps').slice(0, 60),
+                rest: toBoundedInt(ex.rest, 0, 900, 60)
+            };
+            // Charge en % du 1RM (optionnel) : calculée à partir de vos records au lancement de la séance
+            const pct = Number(ex.pct);
+            if (ex.pct !== null && ex.pct !== '' && Number.isFinite(pct) && pct >= 10 && pct <= 120) out.pct = Math.round(pct);
+            return out;
+        }
+
+        function sanitizePrograms(list) {
+            if (!Array.isArray(list)) return null;
+            const seen = new Set();
+            const out = [];
+            list.forEach((p, i) => {
+                if (!p || typeof p !== 'object') return;
+                const title = String(p.title ?? '').trim();
+                const exercises = Array.isArray(p.exercises) ? p.exercises.map(sanitizeExercise).filter(Boolean) : [];
+                if (!title || exercises.length === 0) return;
+                let id = String(p.id ?? '').trim() || `custom-gen-${Date.now()}-${i}`;
+                if (seen.has(id)) id = `${id}-${i}`;
+                seen.add(id);
+                out.push({
+                    id,
+                    title: title.slice(0, 120),
+                    category: String(p.category || 'Personnalisés').slice(0, 40),
+                    description: String(p.description ?? '').slice(0, 500),
+                    exercises
+                });
+            });
+            return out;
+        }
+
+        function sanitizeRecords(list) {
+            if (!Array.isArray(list)) return null;
+            return list
+                .filter(r => r && typeof r === 'object' && String(r.name ?? '').trim())
+                .map(r => ({
+                    name: String(r.name).trim().slice(0, 80),
+                    weight: r.weight ?? 0,
+                    reps: r.reps ?? 0,
+                    onerm: r.onerm ?? 'N/A'
+                }));
+        }
+
+        function sanitizeSessionExercises(list) {
+            if (!Array.isArray(list)) return null;
+            const out = list.map(ex => ({
+                name: String(ex?.name ?? 'Exercice').slice(0, 120),
+                sets: Array.isArray(ex?.sets) ? ex.sets.slice(0, 50).map(st => ({
+                    completed: !!st?.completed,
+                    weight: String(st?.weight ?? '').slice(0, 60),
+                    reps: String(st?.reps ?? '').slice(0, 40),
+                    rest: toBoundedInt(st?.rest, 0, 900, 60)
+                })) : []
+            })).filter(ex => ex.sets.length > 0);
+            return out.length ? out : null;
+        }
+
+        function sanitizeHistory(list) {
+            if (!Array.isArray(list)) return null;
+            return list
+                .filter(h => h && typeof h === 'object')
+                .map(h => {
+                    const exercises = sanitizeSessionExercises(h.exercises);
+                    const setsTotal = exercises ? exercises.reduce((n, ex) => n + ex.sets.length, 0) : 0;
+                    const setsDone = exercises ? exercises.reduce((n, ex) => n + ex.sets.filter(st => st.completed).length, 0) : 0;
+                    return {
+                        id: h.id,
+                        programId: h.programId,
+                        title: String(h.title ?? 'Séance'),
+                        category: String(h.category ?? ''),
+                        date: String(h.date ?? ''),
+                        duration: String(h.duration ?? '00:00'),
+                        exercisesCount: Number(h.exercisesCount) || (exercises ? exercises.length : 0),
+                        isAmrap: !!h.isAmrap,
+                        amrapDurationSeconds: Number(h.amrapDurationSeconds) || 0,
+                        setsDone,
+                        setsTotal,
+                        exercises
+                    };
+                });
+        }
+
+        function sanitizeSession(s) {
+            if (!s || typeof s !== 'object' || !Array.isArray(s.exercises)) return null;
+            const exercises = s.exercises.map(ex => ({
+                name: String(ex?.name ?? 'Exercice'),
+                note: String(ex?.note ?? '').slice(0, 200),
+                sets: Array.isArray(ex?.sets) ? ex.sets.map(st => ({
+                    completed: !!st?.completed,
+                    weight: String(st?.weight ?? ''),
+                    reps: String(st?.reps ?? ''),
+                    rest: toBoundedInt(st?.rest, 0, 900, 60)
+                })) : []
+            })).filter(ex => ex.sets.length > 0);
+            if (exercises.length === 0) return null;
+
+            const isAmrap = !!s.isAmrap;
+            const amrapDurationSeconds = Number(s.amrapDurationSeconds) || 0;
+            let accumulatedMs = Number(s.accumulatedMs);
+            if (!Number.isFinite(accumulatedMs)) {
+                // Ancien format : elapsedSeconds (= temps restant pour un AMRAP)
+                const el = Number(s.elapsedSeconds) || 0;
+                accumulatedMs = (isAmrap ? Math.max(0, amrapDurationSeconds - el) : el) * 1000;
+            }
+            const running = !!s.running && Number.isFinite(Number(s.resumedAt));
+            return {
+                programId: s.programId,
+                title: String(s.title ?? 'Séance'),
+                category: String(s.category ?? ''),
+                exercises,
+                startTime: Number(s.startTime) || Date.now(),
+                isAmrap,
+                amrapDurationSeconds,
+                accumulatedMs,
+                running,
+                resumedAt: running ? Number(s.resumedAt) : null
+            };
+        }
+
+        // ================= CHARGES LIÉES AUX RECORDS (% du 1RM) =================
+        const WEIGHT_PLACEHOLDER = 'À définir';
+
+        function roundToStep(kg, step = 2.5) {
+            return Math.round(kg / step) * step;
+        }
+
+        function formatKg(n) {
+            return String(Math.round(n * 10) / 10).replace('.', ',');
+        }
+
+        function normalizeName(name) {
+            return String(name ?? '')
+                .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+                .toLowerCase()
+                .replace(/\(.*?\)/g, ' ')
+                .replace(/[^a-z0-9 ]+/g, ' ')
+                .replace(/\s+/g, ' ')
+                .trim();
+        }
+
+        // 1RM numérique d'un record (valeur saisie, sinon estimation Epley), ou null
+        function getNumericOneRm(rec) {
+            const v = Number(rec.onerm);
+            if (Number.isFinite(v) && v > 0) return v;
+            const w = Number(rec.weight);
+            const r = Number(rec.reps);
+            if (Number.isFinite(w) && w > 0 && Number.isFinite(r) && r >= 1) return estimateOneRm(w, r);
+            return null;
+        }
+
+        // Trouve le record correspondant à un exercice ("Squat Barre" -> record "Squat")
+        function findRecordForExercise(exName) {
+            const n = ` ${normalizeName(exName)} `;
+            let best = null;
+            let bestLen = 0;
+            state.records.forEach(rec => {
+                const rn = normalizeName(rec.name);
+                if (!rn || getNumericOneRm(rec) === null) return;
+                const padded = ` ${rn} `;
+                if ((n.includes(padded) || padded.includes(n)) && rn.length > bestLen) {
+                    best = rec;
+                    bestLen = rn.length;
+                }
+            });
+            return best;
+        }
+
+        // Charge de travail d'un exercice défini en % du 1RM (null si pas de % ou pas de record)
+        function computeRecordLoad(ex) {
+            const pct = Number(ex.pct);
+            if (!Number.isFinite(pct) || pct <= 0) return null;
+            const rec = findRecordForExercise(ex.name);
+            if (!rec) return null;
+            const oneRm = getNumericOneRm(rec);
+            const kg = roundToStep(oneRm * pct / 100);
+            return {
+                kg,
+                pct,
+                weight: `${formatKg(kg)} kg`,
+                note: `${pct} % de votre 1RM (${formatKg(oneRm)} kg, record « ${rec.name} »)`
+            };
+        }
+
+        // Dernière charge réellement validée pour un exercice, tous programmes confondus
+        function findLastLoadByName(name) {
+            for (const h of state.history) {
+                if (!Array.isArray(h.exercises)) continue;
+                const ex = h.exercises.find(e => e.name === name);
+                if (!ex) continue;
+                const done = ex.sets.filter(st => st.completed && st.weight && st.weight !== WEIGHT_PLACEHOLDER && !isBodyweightLabel(st.weight));
+                if (done.length) return done[done.length - 1].weight;
+            }
+            return null;
+        }
+
+        // Libellé de charge pour la liste des programmes
+        function programLoadLabel(ex) {
+            if (isBodyweightLabel(ex.weight)) return String(ex.weight);
+            if (Number(ex.pct) > 0) {
+                const load = computeRecordLoad(ex);
+                return load ? `${load.weight} · ${load.pct} %` : `${ex.pct} % du 1RM`;
+            }
+            return String(ex.weight);
+        }
+
+        // Libellé de charge pour l'aperçu de la séance sur mesure
+        function describeLoad(ex) {
+            if (isBodyweightLabel(ex.weight)) return '';
+            const load = computeRecordLoad(ex);
+            if (load) return ` | ${load.weight} (${load.pct} % 1RM)`;
+            return ex.weight && ex.weight !== WEIGHT_PLACEHOLDER ? ` | ${ex.weight}` : ' | charge à définir';
+        }
+
+        // Les programmes déjà sauvegardés avant cette version reçoivent les % des programmes par défaut
+        function migrateDefaultPercents(programs) {
+            programs.forEach(p => {
+                const def = DEFAULT_PROGRAMS.find(d => d.id === p.id);
+                if (!def || p.exercises.some(e => e.pct)) return;
+                p.exercises.forEach(e => {
+                    const d = def.exercises.find(x => x.name === e.name && x.pct);
+                    if (d) e.pct = d.pct;
+                });
+            });
+        }
+
+        function loadAppData() {
+            const programs = sanitizePrograms(storageRead(STORAGE_KEYS.programs));
+            state.programs = (programs && programs.length) ? programs : deepClone(DEFAULT_PROGRAMS);
+            migrateDefaultPercents(state.programs);
+
+            const records = sanitizeRecords(storageRead(STORAGE_KEYS.records));
+            state.records = records !== null ? records : deepClone(DEFAULT_RECORDS);
+
+            const history = sanitizeHistory(storageRead(STORAGE_KEYS.history));
+            state.history = history !== null ? history : [];
+
+            state.activeSession = sanitizeSession(storageRead(STORAGE_KEYS.active));
+        }
+
+        function saveAppData() {
+            storageWrite(STORAGE_KEYS.programs, state.programs);
+            storageWrite(STORAGE_KEYS.records, state.records);
+            storageWrite(STORAGE_KEYS.history, state.history);
+            saveActiveSession();
+        }
+
+        // Sauvegarde légère, dédiée à la séance en cours
+        function saveActiveSession() {
+            if (state.activeSession) {
+                storageWrite(STORAGE_KEYS.active, state.activeSession);
+            } else {
+                try { localStorage.removeItem(STORAGE_KEYS.active); } catch (e) { /* ignoré */ }
+            }
+        }
+
+        // ================= NAVIGATION & TABS =================
+        const TAB_IDS = ['programmes', 'generateur', 'seance', 'records', 'historique', 'reglages'];
+        const NAV_ACTIVE_CLASS = "nav-btn relative px-3.5 py-2 rounded-lg text-sm font-medium transition-all duration-200 text-emerald-400 bg-emerald-500/10 border border-emerald-500/20";
+        const NAV_IDLE_CLASS = "nav-btn relative px-3.5 py-2 rounded-lg text-sm font-medium transition-all duration-200 text-slate-400 hover:text-slate-200 hover:bg-slate-800";
+        const MOBILE_ACTIVE_CLASS = "mobile-nav-btn w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-emerald-400 bg-emerald-500/10";
+        const MOBILE_IDLE_CLASS = "mobile-nav-btn w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-slate-300 hover:bg-slate-800";
+
+        function switchTab(tabId) {
+            if (!TAB_IDS.includes(tabId)) tabId = 'programmes';
+            state.currentTab = tabId;
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+
+            // Navigation desktop (la classe "relative" est conservée pour le badge de séance active)
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                const isActive = btn.id === `nav-btn-${tabId}`;
+                btn.className = isActive ? NAV_ACTIVE_CLASS : NAV_IDLE_CLASS;
+                if (isActive) btn.setAttribute('aria-current', 'page');
+                else btn.removeAttribute('aria-current');
+            });
+
+            // Navigation mobile
+            document.querySelectorAll('.mobile-nav-btn').forEach(btn => {
+                btn.className = btn.dataset.tab === tabId ? MOBILE_ACTIVE_CLASS : MOBILE_IDLE_CLASS;
+            });
+            setMobileMenu(false);
+
+            // Actualisation dynamique des vues
+            if (tabId === 'programmes') renderPrograms();
+            if (tabId === 'records') renderRecords();
+            if (tabId === 'historique') renderHistory();
+            if (tabId === 'seance') renderActiveSessionUI();
+
+            updateActiveBadge();
+            window.scrollTo({ top: 0 });
+        }
+
+        function setMobileMenu(open) {
+            const menu = document.getElementById('mobile-menu');
+            const btn = document.getElementById('mobile-menu-btn');
+            menu.classList.toggle('hidden', !open);
+            if (btn) btn.setAttribute('aria-expanded', String(open));
+        }
+
+        function toggleMobileMenu() {
+            setMobileMenu(document.getElementById('mobile-menu').classList.contains('hidden'));
+        }
+
+        function updateActiveBadge() {
+            document.getElementById('active-badge').classList.toggle('hidden', !state.activeSession);
+        }
+
+        // Confirmation intégrée à l'app (Promise<boolean>) : fonctionne même quand window.confirm est bloqué
+        let confirmResolver = null;
+        function confirmDialog(message, okLabel = 'Confirmer', danger = true) {
+            return new Promise(resolve => {
+                if (confirmResolver) confirmResolver(false);
+                confirmResolver = resolve;
+                document.getElementById('confirm-message').textContent = message;
+                const ok = document.getElementById('confirm-ok-btn');
+                ok.textContent = okLabel;
+                ok.className = danger
+                    ? "px-5 py-2 bg-red-500 hover:bg-red-600 text-white rounded-xl text-sm font-bold transition-all"
+                    : "px-5 py-2 bg-emerald-500 hover:bg-emerald-600 text-slate-950 rounded-xl text-sm font-bold transition-all";
+                document.getElementById('confirm-modal').classList.remove('hidden');
+                ok.focus();
+            });
+        }
+
+        function resolveConfirm(result) {
+            document.getElementById('confirm-modal').classList.add('hidden');
+            const resolve = confirmResolver;
+            confirmResolver = null;
+            if (resolve) resolve(result);
+        }
+
+        let toastTimer = null;
+        function showToast(msg, isError = false) {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toast-msg');
+            const toastIcon = document.getElementById('toast-icon');
+
+            toastMsg.textContent = msg;
+            toastIcon.innerHTML = isError ? '<i class="fa-solid fa-triangle-exclamation text-red-400"></i>' : '<i class="fa-solid fa-circle-check text-emerald-400"></i>';
+            toast.classList.remove('translate-y-20', 'opacity-0');
+
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
+        // ================= RENDU ONGLET PROGRAMMES =================
+        function filterPrograms(category) {
+            state.programFilter = category;
+            document.querySelectorAll('#program-filters button').forEach(btn => {
+                if (btn.textContent.trim() === category) {
+                    btn.className = "filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-emerald-500 text-slate-950 transition-all shadow-md shadow-emerald-500/20";
+                } else {
+                    btn.className = "filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all";
+                }
+            });
+            renderPrograms();
+        }
+
+        function renderPrograms() {
+            const grid = document.getElementById('programs-grid');
+            grid.innerHTML = '';
+
+            const filtered = state.programFilter === 'Tous' 
+                ? state.programs 
+                : state.programs.filter(p => p.category === state.programFilter);
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `<div class="col-span-full py-12 text-center text-slate-500 text-sm">Aucun programme trouvé dans cette catégorie.</div>`;
+                return;
+            }
+
+            filtered.forEach(prog => {
+                const card = document.createElement('div');
+                card.className = "bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl flex flex-col justify-between hover:border-slate-700 transition-all";
+                
+                let exercisesHtml = prog.exercises.map(ex => `
+                    <li class="flex items-center justify-between text-xs py-1.5 border-b border-slate-800/60">
+                        <span class="text-slate-300 font-medium">${escapeHtml(ex.name)}</span>
+                        <span class="text-slate-400 font-mono">${ex.sets}x${escapeHtml(String(ex.reps))} (${escapeHtml(programLoadLabel(ex))})</span>
+                    </li>
+                `).join('');
+
+                card.innerHTML = `
+                    <div class="space-y-4">
+                        <div class="flex items-start justify-between">
+                            <span class="px-3 py-1 rounded-full text-[11px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">${escapeHtml(prog.category)}</span>
+                            ${prog.id.startsWith('custom-gen-') ? `<button data-id="${escapeHtml(prog.id)}" onclick="deleteProgram(this.dataset.id)" aria-label="Supprimer le programme" class="text-slate-500 hover:text-red-400 transition-colors"><i class="fa-solid fa-trash text-xs"></i></button>` : ''}
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold text-white">${escapeHtml(prog.title)}</h3>
+                            <p class="text-xs text-slate-400 mt-1 line-clamp-2">${escapeHtml(prog.description)}</p>
+                        </div>
+                        <div class="space-y-1 bg-slate-950/50 rounded-xl p-3 border border-slate-800/80">
+                            <span class="block text-[10px] uppercase font-semibold text-slate-400 tracking-wider mb-1">Exercices (${prog.exercises.length})</span>
+                            <ul class="max-h-36 overflow-y-auto space-y-1 pr-1">
+                                ${exercisesHtml}
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="pt-5 mt-4 border-t border-slate-800 flex items-center justify-between">
+                        <span class="text-[11px] text-slate-400 font-medium"><i class="fa-solid fa-list-check mr-1 text-emerald-400"></i>${prog.exercises.length} mouvements</span>
+                        <button data-id="${escapeHtml(prog.id)}" onclick="startWorkout(this.dataset.id)" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold px-4 py-2 rounded-xl text-xs shadow-lg shadow-emerald-500/20 transition-all flex items-center">
+                            <i class="fa-solid fa-play mr-1.5"></i>Démarrer la séance
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        async function deleteProgram(progId) {
+            const prog = state.programs.find(p => p.id === progId);
+            if (!prog) return;
+            if (!(await confirmDialog(`Supprimer le programme « ${prog.title} » ?`, 'Supprimer'))) return;
+            state.programs = state.programs.filter(p => p.id !== progId);
+            saveAppData();
+            renderPrograms();
+            showToast("Programme supprimé avec succès.");
+        }
+
+        // ================= ONGLET GÉNÉRATEUR =================
+        function switchGenSubTab(subId) {
+            state.currentGenSubTab = subId;
+            document.querySelectorAll('.gen-sub-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`gen-sub-${subId}`).classList.remove('hidden');
+
+            document.querySelectorAll('.gen-tab-btn').forEach(btn => {
+                btn.className = "gen-tab-btn whitespace-nowrap pb-3 text-sm font-semibold border-b-2 border-transparent text-slate-400 hover:text-slate-200";
+            });
+            document.getElementById(`gen-tab-btn-${subId}`).className = "gen-tab-btn whitespace-nowrap pb-3 text-sm font-semibold border-b-2 border-emerald-500 text-emerald-400";
+
+            if (subId === 'mesure') renderCustomExercisesList();
+        }
+
+        // Programmes générés en attente d'import : évite d'injecter du JSON dans des attributs onclick
+        const pendingPrograms = {};
+
+        function clampInt(value, min, max, fallback) {
+            const n = parseInt(value, 10);
+            if (!Number.isFinite(n)) return fallback;
+            return Math.min(Math.max(n, min), max);
+        }
+
+        // 1. Générateur Tractions (Russian Fighter)
+        function generatePullupProgram() {
+            const input = document.getElementById('gen-pullup-max');
+            const max = clampInt(input.value, 1, 50, 8);
+            input.value = max;
+            const container = document.getElementById('gen-pullup-result');
+            container.classList.remove('hidden');
+
+            // Protocole Russian Fighter simplifié sur 5 jours (minimum 1 répétition par série)
+            const toReps = ratio => Math.max(1, Math.floor(max * ratio));
+            const days = [
+                [0.6, 0.5, 0.4, 0.3, 0.2],
+                [0.6, 0.5, 0.4, 0.3, 0.25],
+                [0.6, 0.5, 0.4, 0.35, 0.3],
+                [0.6, 0.5, 0.45, 0.35, 0.3],
+                [0.6, 0.55, 0.45, 0.35, 0.3]
+            ].map(day => day.map(toReps));
+
+            // Un programme par jour : chaque séance du protocole peut être lancée séparément
+            pendingPrograms.pullup = days.map((day, d) => ({
+                title: `Tractions Russian Fighter - Jour ${d + 1}`,
+                category: 'Poids de corps',
+                exercises: day.map((reps, i) => ({
+                    name: `Tractions Strictes (Série ${i + 1})`, sets: 1, reps: String(reps), weight: 'Poids du corps', rest: 120
+                }))
+            }));
+
+            const daysHtml = days.map((day, i) => `
+                <div class="bg-slate-900 p-2 rounded-lg border border-slate-800"><span class="block text-[10px] text-slate-400">Jour ${i + 1}</span><span class="font-bold text-white">${day.join(', ')}</span><button onclick="importGeneratedProgram('pullup', ${i})" class="mt-2 w-full bg-slate-800 hover:bg-slate-700 text-emerald-400 font-semibold px-2 py-1 rounded-lg text-[10px] transition-all">+ Ajouter</button></div>
+            `).join('');
+
+            container.innerHTML = `
+                <div class="bg-slate-950 rounded-xl p-4 border border-slate-800 space-y-3">
+                    <h3 class="text-sm font-bold text-emerald-400"><i class="fa-solid fa-bolt mr-2"></i>Programme Russian Fighter (Max: ${max})</h3>
+                    <p class="text-xs text-slate-300">Effectuez les séries suivantes 4 à 5 fois par semaine avec des temps de repos complets (2-3 min) entre chaque série.</p>
+                    <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 text-center pt-2 font-mono text-xs">
+                        ${daysHtml}
+                    </div>
+                    <div class="flex justify-end pt-3">
+                        <button onclick="importGeneratedProgram('pullup')" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold px-4 py-2 rounded-xl text-xs transition-all shadow-md shadow-emerald-500/20">
+                            Ajouter les 5 jours
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // 2. Générateur Pompes (Volume & Densité)
+        function generatePushupProgram() {
+            const input = document.getElementById('gen-pushup-max');
+            const max = clampInt(input.value, 5, 150, 20);
+            input.value = max;
+            const container = document.getElementById('gen-pushup-result');
+            container.classList.remove('hidden');
+
+            const targetReps = Math.round(max * 1.5);
+            const series = [0.4, 0.35, 0.3, 0.25, 0.2].map(r => Math.max(1, Math.round(max * r)));
+
+            pendingPrograms.pushup = {
+                title: 'Pompes Volume & Densité',
+                category: 'Poids de corps',
+                exercises: series.map((reps, i) => ({
+                    name: `Pompes Classiques (S${i + 1})`, sets: 1, reps: String(reps), weight: 'Poids du corps', rest: 60
+                }))
+            };
+
+            const seriesHtml = series.map((reps, i) => `
+                <div class="bg-slate-900 p-2 rounded-lg border border-slate-800"><span class="block text-[10px] text-slate-400">Série ${i + 1}</span><span class="font-bold text-white">${reps} reps</span></div>
+            `).join('');
+
+            container.innerHTML = `
+                <div class="bg-slate-950 rounded-xl p-4 border border-slate-800 space-y-3">
+                    <h3 class="text-sm font-bold text-cyan-400"><i class="fa-solid fa-bolt mr-2"></i>Programme Pompes Volume & Densité (Max: ${max})</h3>
+                    <p class="text-xs text-slate-300">Objectif total de ${targetReps} répétitions à répartir sur 5 séries avec 60 secondes de repos maximum.</p>
+                    <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 text-center pt-2 font-mono text-xs">
+                        ${seriesHtml}
+                    </div>
+                    <div class="flex justify-end pt-3">
+                        <button onclick="importGeneratedProgram('pushup')" class="bg-cyan-500 hover:bg-cyan-600 text-slate-950 font-bold px-4 py-2 rounded-xl text-xs transition-all shadow-md shadow-cyan-500/20">
+                            Ajouter ce programme
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // 3. Sur Mesure & Ordre Biomécanique Strict
+        function renderCustomExercisesList() {
+            const listContainer = document.getElementById('custom-exercises-list');
+            listContainer.innerHTML = '';
+
+            // Groupement par catégories biomécaniques
+            const categories = [
+                { key: 'snc', label: '1. Système Nerveux Central (SNC Lourd)', badgeColor: 'bg-red-500/10 text-red-400 border-red-500/20' },
+                { key: 'poly', label: '2. Polyarticulaires', badgeColor: 'bg-orange-500/10 text-orange-400 border-orange-500/20' },
+                { key: 'iso', label: '3. Isolation', badgeColor: 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20' },
+                { key: 'core', label: '4. Abdos / Core', badgeColor: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' }
+            ];
+
+            categories.forEach(cat => {
+                const catExercises = ALL_CUSTOM_EXERCISES_POOL.filter(ex => ex.cat === cat.key);
+                if (catExercises.length === 0) return;
+
+                const catWrapper = document.createElement('div');
+                catWrapper.className = "space-y-2 col-span-full bg-slate-950/60 border border-slate-800/80 p-4 rounded-xl";
+                
+                let headerHtml = `
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="px-2.5 py-1 rounded-full text-xs font-bold border ${cat.badgeColor}">${cat.label}</span>
+                        <span class="text-[10px] text-slate-400 font-mono">${catExercises.length} exercices</span>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+                `;
+
+                let itemsHtml = '';
+                catExercises.forEach(ex => {
+                    itemsHtml += `
+                        <label class="flex items-center space-x-3 bg-slate-900 border border-slate-800 p-3 rounded-xl cursor-pointer hover:border-slate-700 transition-all">
+                            <input type="checkbox" class="custom-ex-cb w-4 h-4 accent-emerald-500 rounded bg-slate-950 border-slate-800" data-cat="${ex.cat}" ${ex.bw ? 'data-bw="1"' : ''} value="${escapeHtml(ex.name)}">
+                            <span class="text-xs font-medium text-slate-200">${escapeHtml(ex.name)}</span>
+                        </label>
+                    `;
+                });
+
+                catWrapper.innerHTML = headerHtml + itemsHtml + `</div>`;
+                listContainer.appendChild(catWrapper);
+            });
+        }
+
+        function generateCustomWorkout() {
+            const checkboxes = document.querySelectorAll('.custom-ex-cb:checked');
+            if (checkboxes.length === 0) {
+                showToast("Veuillez sélectionner au moins un exercice.", true);
+                return;
+            }
+
+            const selected = [];
+            checkboxes.forEach(cb => {
+                selected.push({
+                    name: cb.value,
+                    cat: cb.getAttribute('data-cat'),
+                    bw: cb.getAttribute('data-bw') === '1'
+                });
+            });
+
+            // Tri par ordre biomécanique strict: 1. snc, 2. poly, 3. iso, 4. core
+            const catOrder = { 'snc': 1, 'poly': 2, 'iso': 3, 'core': 4 };
+            selected.sort((a, b) => (catOrder[a.cat] || 5) - (catOrder[b.cat] || 5));
+
+            // Séries / reps / repos par catégorie ; la charge est un % du 1RM (calculée depuis vos records)
+            const profiles = {
+                snc:  { sets: 5, reps: "5",     rest: 150, pct: 80 },
+                poly: { sets: 4, reps: "8-10",  rest: 90,  pct: 70 },
+                iso:  { sets: 3, reps: "12-15", rest: 60,  pct: 60 },
+                core: { sets: 3, reps: "15-20 reps / 45s", rest: 45, pct: null }
+            };
+            const generatedExercises = selected.map(item => {
+                const p = profiles[item.cat] || { sets: 3, reps: "10", rest: 60, pct: 60 };
+                const ex = { name: item.name, sets: p.sets, reps: p.reps, weight: WEIGHT_PLACEHOLDER, rest: p.rest };
+                if (item.bw || item.cat === 'core') {
+                    ex.weight = item.cat === 'poly' ? 'Poids du corps / Lesté' : 'Poids du corps';
+                } else if (p.pct) {
+                    ex.pct = p.pct;
+                }
+                return ex;
+            });
+
+            pendingPrograms.custom = {
+                title: `Séance Sur Mesure (${new Date().toLocaleDateString('fr-FR')})`,
+                category: 'Personnalisés',
+                exercises: generatedExercises
+            };
+
+            const resultContainer = document.getElementById('custom-workout-result');
+            resultContainer.classList.remove('hidden');
+
+            let listHtml = generatedExercises.map(ex => `
+                <li class="flex items-center justify-between text-xs py-1.5 border-b border-slate-800">
+                    <span class="text-slate-200 font-medium">${escapeHtml(ex.name)}</span>
+                    <span class="text-slate-400 font-mono">${ex.sets}x${escapeHtml(String(ex.reps))} | Repos ${ex.rest}s${escapeHtml(describeLoad(ex))}</span>
+                </li>
+            `).join('');
+
+            resultContainer.innerHTML = `
+                <div class="bg-slate-950 rounded-xl p-5 border border-slate-800 space-y-4">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-sm font-bold text-white"><i class="fa-solid fa-list-check text-emerald-400 mr-2"></i>Séance Sur Mesure (Tri Biomécanique Validé)</h3>
+                        <span class="px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/10 text-emerald-400">Personnalisé</span>
+                    </div>
+                    <ul class="space-y-2">
+                        ${listHtml}
+                    </ul>
+                    <div class="flex justify-end pt-2">
+                        <button onclick="importGeneratedProgram('custom')" class="bg-gradient-to-r from-emerald-500 to-cyan-500 text-slate-950 font-bold px-5 py-2.5 rounded-xl text-xs shadow-lg transition-all">
+                            Importer cette séance dans les programmes
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Importe un programme généré (ou tous ceux de la liste). `dayIndex` cible un seul élément.
+        function importGeneratedProgram(key, dayIndex) {
+            const templates = [].concat(pendingPrograms[key] || []);
+            const selected = Number.isInteger(dayIndex) ? templates.slice(dayIndex, dayIndex + 1) : templates;
+            if (selected.length === 0) {
+                showToast("Programme introuvable, veuillez le régénérer.", true);
+                return;
+            }
+            const stamp = Date.now();
+            selected.forEach((tpl, i) => {
+                state.programs.push({
+                    id: `custom-gen-${stamp}-${i}`,
+                    title: tpl.title,
+                    category: tpl.category,
+                    description: "Programme généré automatiquement par FitPulse Pro.",
+                    exercises: deepClone(tpl.exercises)
+                });
+            });
+            saveAppData();
+            showToast(selected.length > 1
+                ? `${selected.length} programmes importés dans 'Programmes' !`
+                : "Programme importé avec succès dans 'Programmes' !");
+            filterPrograms('Tous');
+            switchTab('programmes');
+        }
+
+        // ================= ONGLET SÉANCE ACTIVE & CHRONOMÈTRE =================
+        // Le temps est calculé à partir d'horodatages (et non en comptant des ticks) :
+        // il reste exact si l'onglet passe en arrière-plan ou si la page est rechargée.
+        let sessionInterval = null;
+        let restInterval = null;
+        let restEndAt = 0;
+        let lastBeepSecond = null;
+
+        function unlockAudio() {
+            try {
+                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+            } catch (e) { /* audio indisponible : ignoré */ }
+        }
+
+        function getSessionElapsedMs(s = state.activeSession) {
+            if (!s) return 0;
+            return s.accumulatedMs + (s.running && s.resumedAt ? Date.now() - s.resumedAt : 0);
+        }
+
+        // Secondes affichées : temps restant pour un AMRAP, temps écoulé sinon
+        function getSessionDisplaySeconds(s = state.activeSession) {
+            if (!s) return 0;
+            const elapsed = Math.floor(getSessionElapsedMs(s) / 1000);
+            return s.isAmrap ? Math.max(0, s.amrapDurationSeconds - elapsed) : elapsed;
+        }
+
+        function stopRestTimer() {
+            if (restInterval) { clearInterval(restInterval); restInterval = null; }
+            const banner = document.getElementById('rest-timer-banner');
+            if (banner) banner.classList.add('hidden');
+        }
+
+        function stopAllTimers() {
+            if (sessionInterval) { clearInterval(sessionInterval); sessionInterval = null; }
+            stopRestTimer();
+        }
+
+        function isBodyweightLabel(w) {
+            return String(w ?? '').toLowerCase().includes('poids du corps');
+        }
+
+        // Crée la séance active (avec confirmation si une autre séance est déjà en cours)
+        async function beginSession({ programId, title, category, exercises, isAmrap, amrapDurationSeconds, note }) {
+            if (state.activeSession) {
+                if (programId && state.activeSession.programId === programId) {
+                    showToast("Cette séance est déjà en cours.");
+                    switchTab('seance');
+                    return;
+                }
+                if (!(await confirmDialog(`Une séance (« ${state.activeSession.title} ») est déjà en cours.\nLa remplacer par « ${title} » ? La progression actuelle sera perdue.`, 'Remplacer'))) return;
+            }
+            stopAllTimers();
+
+            state.activeSession = {
+                programId: programId,
+                title: title,
+                category: category,
+                exercises: exercises,
+                startTime: Date.now(),
+                isAmrap: !!isAmrap,
+                amrapDurationSeconds: amrapDurationSeconds || 0,
+                accumulatedMs: 0,
+                running: false,
+                resumedAt: null
+            };
+
+            saveActiveSession();
+            switchTab('seance');
+            if (note) showToast(note);
+        }
+
+        async function startWorkout(progId) {
+            const prog = state.programs.find(p => p.id === progId);
+            if (!prog) return;
+
+            // Détection si c'est un WOD de type AMRAP (ex: Cindy AMRAP 20 min)
+            let isAmrap = false;
+            let amrapDurationSeconds = 0;
+            const descLower = (prog.description + " " + prog.title).toLowerCase();
+            if (descLower.includes('amrap')) {
+                isAmrap = true;
+                const match = descLower.match(/(\d+)\s*(?:min|minutes)/);
+                amrapDurationSeconds = match ? parseInt(match[1], 10) * 60 : 20 * 60; // Défaut 20 min
+            }
+
+            // Priorité des charges : 1) % du 1RM (records) 2) dernière séance de ce programme
+            // 3) dernière charge connue de l'exercice (si "À définir") 4) charge du programme
+            const last = state.history.find(h => h.programId === prog.id && Array.isArray(h.exercises));
+            let reusedLoads = false;
+            let linkedLoads = false;
+
+            const sessionExercises = prog.exercises.map((ex, exIdx) => {
+                const setCount = typeof ex.sets === 'number' ? ex.sets : 3;
+                const baseWeight = String(ex.weight ?? '');
+                const bodyweight = isBodyweightLabel(baseWeight);
+                const recordLoad = bodyweight ? null : computeRecordLoad(ex);
+                const prev = last && last.exercises[exIdx] && last.exercises[exIdx].name === ex.name ? last.exercises[exIdx] : null;
+                const prevDone = prev ? prev.sets.filter(st => st.completed && st.weight && st.weight !== WEIGHT_PLACEHOLDER && !isBodyweightLabel(st.weight)) : [];
+                const nameLoad = (!bodyweight && !recordLoad && !prev && baseWeight === WEIGHT_PLACEHOLDER) ? findLastLoadByName(ex.name) : null;
+
+                const setsArr = [];
+                for (let i = 0; i < setCount; i++) {
+                    let weight = baseWeight;
+                    if (recordLoad) {
+                        weight = recordLoad.weight;
+                    } else if (!bodyweight && prev) {
+                        const prevSet = (prev.sets[i] && prevDone.includes(prev.sets[i])) ? prev.sets[i] : prevDone[prevDone.length - 1];
+                        if (prevSet) { weight = prevSet.weight; reusedLoads = true; }
+                    } else if (nameLoad) {
+                        weight = nameLoad;
+                        reusedLoads = true;
+                    }
+                    setsArr.push({
+                        completed: false,
+                        weight: weight,
+                        reps: String(ex.reps ?? ''),
+                        rest: ex.rest !== undefined ? ex.rest : 60
+                    });
+                }
+                if (recordLoad) linkedLoads = true;
+                return { name: ex.name, note: recordLoad ? recordLoad.note : '', sets: setsArr };
+            });
+
+            await beginSession({
+                programId: prog.id,
+                title: prog.title,
+                category: prog.category,
+                exercises: sessionExercises,
+                isAmrap,
+                amrapDurationSeconds,
+                note: linkedLoads && reusedLoads ? "Charges calculées d'après vos records et reprises de votre dernière séance."
+                    : linkedLoads ? "Charges calculées d'après vos records."
+                    : reusedLoads ? "Charges reprises de votre dernière séance." : null
+            });
+        }
+
+        // Relance une séance passée avec les mêmes exercices et les mêmes charges
+        async function startWorkoutFromHistory(idx) {
+            const h = state.history[idx];
+            if (!h || !Array.isArray(h.exercises) || h.exercises.length === 0) return;
+            const exercises = h.exercises.map(ex => ({
+                name: ex.name,
+                sets: ex.sets.map(st => ({ completed: false, weight: st.weight, reps: st.reps, rest: st.rest }))
+            }));
+            await beginSession({
+                programId: h.programId,
+                title: h.title,
+                category: h.category,
+                exercises,
+                isAmrap: h.isAmrap,
+                amrapDurationSeconds: h.amrapDurationSeconds,
+                note: "Séance relancée avec les charges de la dernière fois."
+            });
+        }
+
+        function renderActiveSessionUI() {
+            const noActiveDiv = document.getElementById('no-active-seance');
+            const activeContDiv = document.getElementById('active-seance-container');
+            const s = state.activeSession;
+
+            if (!s) {
+                noActiveDiv.classList.remove('hidden');
+                activeContDiv.classList.add('hidden');
+                stopAllTimers();
+                updateActiveBadge();
+                return;
+            }
+
+            noActiveDiv.classList.add('hidden');
+            activeContDiv.classList.remove('hidden');
+
+            document.getElementById('active-workout-category').textContent = s.category;
+            document.getElementById('active-workout-title').textContent = s.title;
+            document.getElementById('timer-label').textContent = s.isAmrap ? "Minuteur AMRAP" : "Chrono Séance";
+            document.getElementById('global-timer-display').textContent = formatSeconds(getSessionDisplaySeconds(s));
+
+            updateSessionControls();
+            renderActiveExercises();
+            updateActiveBadge();
+
+            if (s.running && !sessionInterval) runSessionTimer();
+        }
+
+        // Synchronise boutons / liste / chrono avec l'état réel de la séance (nouvelle séance, pause, reprise...)
+        function updateSessionControls() {
+            const s = state.activeSession;
+            if (!s) return;
+            const btn = document.getElementById('start-chrono-btn');
+            const exList = document.getElementById('active-exercises-list');
+            const finishBtn = document.getElementById('finish-workout-btn');
+            const timerIcon = document.getElementById('timer-icon');
+            const started = s.running || s.accumulatedMs > 0;
+
+            btn.disabled = false;
+            if (s.running) {
+                btn.innerHTML = '<i class="fa-solid fa-pause mr-2"></i>Pause';
+                btn.className = "bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-5 py-3 rounded-xl text-sm shadow-lg shadow-amber-500/20 transition-all flex items-center";
+            } else {
+                btn.innerHTML = `<i class="fa-solid fa-play mr-2"></i>${started ? 'Reprendre' : 'Démarrer'}`;
+                btn.className = "bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold px-5 py-3 rounded-xl text-sm shadow-lg shadow-emerald-500/20 transition-all flex items-center";
+            }
+
+            exList.classList.toggle('opacity-50', !started);
+            exList.classList.toggle('pointer-events-none', !started);
+
+            finishBtn.disabled = !started;
+            finishBtn.className = started
+                ? "bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold px-8 py-3.5 rounded-xl text-sm transition-all shadow-lg shadow-emerald-500/20 cursor-pointer"
+                : "bg-slate-800 text-slate-500 font-bold px-8 py-3.5 rounded-xl text-sm transition-all cursor-not-allowed";
+
+            timerIcon.className = s.isAmrap
+                ? "fa-solid fa-hourglass-start text-cyan-400 text-xl"
+                : "fa-solid fa-stopwatch text-emerald-400 text-xl";
+            if (s.running) timerIcon.classList.add('animate-pulse');
+        }
+
+        function runSessionTimer() {
+            if (sessionInterval) clearInterval(sessionInterval);
+            sessionInterval = setInterval(tickSession, 250);
+            tickSession();
+        }
+
+        function tickSession() {
+            const s = state.activeSession;
+            if (!s || !s.running) {
+                if (sessionInterval) { clearInterval(sessionInterval); sessionInterval = null; }
+                return;
+            }
+            const display = getSessionDisplaySeconds(s);
+            document.getElementById('global-timer-display').textContent = formatSeconds(display);
+
+            if (s.isAmrap) {
+                if (display > 0 && display <= 5 && display !== lastBeepSecond) {
+                    lastBeepSecond = display;
+                    playBeep(440, 0.1);
+                }
+                if (display <= 0) {
+                    playBeep(880, 0.5);
+                    finishActiveWorkout(true);
+                }
+            }
+        }
+
+        // Démarrer / Pause / Reprendre
+        function toggleSessionRunning() {
+            const s = state.activeSession;
+            if (!s) return;
+
+            if (s.running) {
+                s.accumulatedMs = getSessionElapsedMs(s);
+                s.running = false;
+                s.resumedAt = null;
+                if (sessionInterval) { clearInterval(sessionInterval); sessionInterval = null; }
+                showToast("Séance en pause.");
+            } else {
+                unlockAudio();
+                const firstStart = s.accumulatedMs === 0;
+                s.running = true;
+                s.resumedAt = Date.now();
+                lastBeepSecond = null;
+                runSessionTimer();
+                showToast(firstStart
+                    ? (s.isAmrap ? "Minuteur AMRAP démarré !" : "Séance démarrée ! Bon entraînement.")
+                    : "Séance reprise.");
+            }
+            saveActiveSession();
+            updateSessionControls();
+        }
+
+        async function cancelActiveWorkout() {
+            if (await confirmDialog("Voulez-vous vraiment abandonner cette séance ? Toute progression non enregistrée sera perdue.", 'Abandonner')) {
+                stopAllTimers();
+                state.activeSession = null;
+                saveActiveSession();
+                switchTab('programmes');
+                showToast("Séance abandonnée.", true);
+            }
+        }
+
+        function renderActiveExercises() {
+            const container = document.getElementById('active-exercises-list');
+            container.innerHTML = '';
+
+            state.activeSession.exercises.forEach((ex, exIdx) => {
+                const card = document.createElement('div');
+                card.className = "bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-3";
+
+                let setsHtml = '';
+                ex.sets.forEach((set, setIdx) => {
+                    const isBodyweight = String(set.weight).toLowerCase().includes('poids du corps');
+                    setsHtml += `
+                        <div class="flex items-center justify-between gap-3 bg-slate-950 p-3 rounded-xl border border-slate-800/80">
+                            <div class="flex items-center space-x-3">
+                                <span class="w-7 h-7 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center text-xs font-bold text-slate-300 font-mono">${setIdx + 1}</span>
+                                <span class="text-xs font-semibold text-slate-400">Série ${setIdx + 1}</span>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <div>
+                                    <span class="block text-[10px] text-slate-400 mb-0.5">Poids (kg)</span>
+                                    <input type="text" ${isBodyweight ? 'disabled' : ''} value="${escapeHtml(String(set.weight))}" onchange="updateSetActive(${exIdx}, ${setIdx}, 'weight', this.value)" class="w-24 bg-slate-900 border border-slate-800 rounded-lg px-2.5 py-1 text-xs text-white text-center font-mono focus:outline-none focus:border-emerald-500 ${isBodyweight ? 'opacity-70 cursor-not-allowed' : ''}">
+                                </div>
+                                <div>
+                                    <span class="block text-[10px] text-slate-400 mb-0.5">Reps</span>
+                                    <input type="text" value="${escapeHtml(String(set.reps))}" onchange="updateSetActive(${exIdx}, ${setIdx}, 'reps', this.value)" class="w-20 bg-slate-900 border border-slate-800 rounded-lg px-2.5 py-1 text-xs text-white text-center font-mono focus:outline-none focus:border-emerald-500">
+                                </div>
+                                <button onclick="toggleSetComplete(${exIdx}, ${setIdx})" aria-label="Valider la série ${setIdx + 1}" aria-pressed="${set.completed}" class="w-9 h-9 rounded-xl flex items-center justify-center transition-all ${set.completed ? 'bg-emerald-500 text-slate-950 shadow-lg shadow-emerald-500/20' : 'bg-slate-800 text-slate-400 hover:text-white'}">
+                                    <i class="fa-solid fa-check text-sm"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                const doneCount = ex.sets.filter(st => st.completed).length;
+                card.innerHTML = `
+                    <div class="flex items-center justify-between gap-3">
+                        <div>
+                            <h3 class="text-base font-bold text-white">${escapeHtml(ex.name)}</h3>
+                            ${ex.note ? `<p class="text-[11px] text-cyan-400 mt-0.5"><i class="fa-solid fa-link mr-1"></i>${escapeHtml(ex.note)}</p>` : ''}
+                        </div>
+                        <span class="text-xs font-mono ${doneCount === ex.sets.length ? 'text-emerald-400' : 'text-slate-400'}">${doneCount}/${ex.sets.length} séries</span>
+                    </div>
+                    <div class="space-y-2">
+                        ${setsHtml}
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function updateSetActive(exIdx, setIdx, field, val) {
+            const ex = state.activeSession && state.activeSession.exercises[exIdx];
+            if (ex && ex.sets[setIdx]) {
+                ex.sets[setIdx][field] = val;
+                saveActiveSession();
+            }
+        }
+
+        function toggleSetComplete(exIdx, setIdx) {
+            if (!state.activeSession) return;
+            const set = state.activeSession.exercises[exIdx].sets[setIdx];
+            set.completed = !set.completed;
+            saveActiveSession();
+            renderActiveExercises();
+
+            if (set.completed) {
+                playBeep(600, 0.1);
+                // Déclencher le timer de repos si le repos > 0
+                const restSecs = set.rest !== undefined ? set.rest : 60;
+                if (restSecs > 0) startRestTimer(restSecs);
+            }
+        }
+
+        // Chrono de repos sonore (basé sur une heure de fin, donc exact même en arrière-plan)
+        function startRestTimer(seconds) {
+            const banner = document.getElementById('rest-timer-banner');
+            const display = document.getElementById('rest-countdown-display');
+            banner.classList.remove('hidden');
+            restEndAt = Date.now() + seconds * 1000;
+            let lastBeep = null;
+
+            if (restInterval) clearInterval(restInterval);
+
+            const update = () => {
+                const remaining = Math.ceil((restEndAt - Date.now()) / 1000);
+                display.textContent = formatSeconds(Math.max(0, remaining));
+
+                if (remaining > 0 && remaining <= 3 && remaining !== lastBeep) {
+                    lastBeep = remaining;
+                    playBeep(440, 0.1);
+                }
+                if (remaining <= 0) {
+                    stopRestTimer();
+                    playBeep(880, 0.4);
+                    showToast("Fin du temps de repos ! Reprenez.");
+                }
+            };
+            restInterval = setInterval(update, 250);
+            update();
+        }
+
+        function skipRestTimer() {
+            stopRestTimer();
+        }
+
+        async function finishActiveWorkout(auto = false) {
+            const s = state.activeSession;
+            if (!s) return;
+
+            const doneSets = s.exercises.reduce((n, ex) => n + ex.sets.filter(st => st.completed).length, 0);
+            if (auto !== true && doneSets === 0 && !(await confirmDialog("Aucune série n'est validée. Terminer quand même la séance ?", 'Terminer', false))) return;
+            if (state.activeSession !== s) return; // séance déjà terminée ou abandonnée pendant la confirmation
+
+            // Durée réelle de la séance (et non le temps restant affiché pour un AMRAP)
+            let elapsedSec = Math.floor(getSessionElapsedMs(s) / 1000);
+            if (s.isAmrap) elapsedSec = Math.min(elapsedSec, s.amrapDurationSeconds);
+
+            stopAllTimers();
+
+            state.history.unshift({
+                id: 'hist-' + Date.now(),
+                title: s.title,
+                category: s.category,
+                date: new Date().toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
+                duration: formatSeconds(elapsedSec),
+                exercisesCount: s.exercises.length,
+                programId: s.programId,
+                isAmrap: s.isAmrap,
+                amrapDurationSeconds: s.amrapDurationSeconds,
+                setsDone: doneSets,
+                setsTotal: s.exercises.reduce((n, ex) => n + ex.sets.length, 0),
+                exercises: s.exercises.map(ex => ({
+                    name: ex.name,
+                    sets: ex.sets.map(st => ({ completed: st.completed, weight: st.weight, reps: st.reps, rest: st.rest }))
+                }))
+            });
+            state.activeSession = null;
+            saveAppData();
+
+            switchTab('historique');
+            showToast(auto === true ? "Temps AMRAP écoulé ! Séance enregistrée." : "Séance terminée et enregistrée avec succès !");
+        }
+
+        function formatSeconds(sec) {
+            sec = Math.max(0, Math.floor(sec));
+            const mins = Math.floor(sec / 60);
+            const remainSec = sec % 60;
+            const hrs = Math.floor(mins / 60);
+            const remainMins = mins % 60;
+
+            if (hrs > 0) {
+                return `${hrs.toString().padStart(2, '0')}:${remainMins.toString().padStart(2, '0')}:${remainSec.toString().padStart(2, '0')}`;
+            }
+            return `${mins.toString().padStart(2, '0')}:${remainSec.toString().padStart(2, '0')}`;
+        }
+
+        // ================= ONGLET RECORDS =================
+        function renderRecords() {
+            const grid = document.getElementById('records-grid');
+            grid.innerHTML = '';
+
+            if (state.records.length === 0) {
+                grid.innerHTML = `<div class="col-span-full py-12 text-center text-slate-500 text-sm">Aucun record personnel enregistré.</div>`;
+                return;
+            }
+
+            state.records.forEach((rec, idx) => {
+                const oneRm = getNumericOneRm(rec);
+                const zonesHtml = oneRm ? `
+                    <div>
+                        <span class="block text-[9px] text-slate-400 uppercase tracking-wider mb-1.5">Charges de travail (% du 1RM)</span>
+                        <div class="flex flex-wrap gap-1.5">
+                            ${[60, 70, 80, 90].map(p => `<span class="px-2 py-1 rounded-lg bg-slate-950 border border-slate-800 text-[11px] font-mono text-slate-300">${p} % <strong class="text-white">${formatKg(roundToStep(oneRm * p / 100))} kg</strong></span>`).join('')}
+                        </div>
+                    </div>
+                ` : '';
+                const card = document.createElement('div');
+                card.className = "bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4 hover:border-slate-700 transition-all";
+                card.innerHTML = `
+                    <div class="flex items-start justify-between">
+                        <div>
+                            <span class="text-[10px] text-emerald-400 font-semibold uppercase tracking-widest">Personal Record</span>
+                            <h3 class="text-lg font-bold text-white mt-0.5">${escapeHtml(rec.name)}</h3>
+                        </div>
+                        <div class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center">
+                            <i class="fa-solid fa-trophy"></i>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-3 gap-2 pt-2 border-t border-slate-800 text-center font-mono">
+                        <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800/80">
+                            <span class="block text-[9px] text-slate-400 uppercase">Poids Max</span>
+                            <span class="text-sm font-bold text-white">${escapeHtml(String(rec.weight))} kg</span>
+                        </div>
+                        <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800/80">
+                            <span class="block text-[9px] text-slate-400 uppercase">Reps Max</span>
+                            <span class="text-sm font-bold text-white">${escapeHtml(String(rec.reps))}</span>
+                        </div>
+                        <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800/80">
+                            <span class="block text-[9px] text-slate-400 uppercase">1RM Estimé</span>
+                            <span class="text-sm font-bold text-cyan-400">${escapeHtml(String(rec.onerm))} kg</span>
+                        </div>
+                    </div>
+                    ${zonesHtml}
+                    <div class="flex justify-end pt-1">
+                        <button onclick="deleteRecord(${idx})" class="text-xs text-slate-500 hover:text-red-400 transition-colors">Supprimer</button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function openAddRecordModal() {
+            document.getElementById('record-modal').classList.remove('hidden');
+            document.getElementById('record-ex-name').focus();
+        }
+
+        function closeAddRecordModal() {
+            document.getElementById('record-modal').classList.add('hidden');
+            document.getElementById('record-ex-name').value = '';
+            document.getElementById('record-ex-weight').value = '';
+            document.getElementById('record-ex-reps').value = '';
+            document.getElementById('record-ex-onerm').value = '';
+        }
+
+        // Retourne null (vide), NaN (invalide) ou le nombre saisi
+        function readNumberField(id) {
+            const raw = document.getElementById(id).value.trim().replace(',', '.');
+            if (raw === '') return null;
+            const n = Number(raw);
+            return Number.isFinite(n) ? n : NaN;
+        }
+
+        // Formule d'Epley ; à 1 répétition, le 1RM est le poids soulevé
+        function estimateOneRm(weight, reps) {
+            if (reps <= 1) return weight;
+            return Math.round(weight * (1 + reps / 30) * 10) / 10;
+        }
+
+        function saveRecord() {
+            const name = document.getElementById('record-ex-name').value.trim();
+            const weight = readNumberField('record-ex-weight');
+            const reps = readNumberField('record-ex-reps');
+            let onerm = readNumberField('record-ex-onerm');
+
+            if (!name) {
+                showToast("Veuillez renseigner le nom de l'exercice.", true);
+                return;
+            }
+            if (weight === null || Number.isNaN(weight) || weight < 0) {
+                showToast("Poids max invalide : saisissez un nombre positif.", true);
+                return;
+            }
+            if (reps === null || Number.isNaN(reps) || reps < 1 || !Number.isInteger(reps)) {
+                showToast("Répétitions invalides : saisissez un entier supérieur ou égal à 1.", true);
+                return;
+            }
+            if (onerm !== null && (Number.isNaN(onerm) || onerm < 0)) {
+                showToast("1RM invalide : saisissez un nombre positif ou laissez vide.", true);
+                return;
+            }
+            if (onerm === null) onerm = weight > 0 ? estimateOneRm(weight, reps) : 'N/A';
+
+            // "Ajouter / Mettre à jour" : met à jour le record existant au lieu de créer un doublon
+            const existingIdx = state.records.findIndex(r => r.name.toLowerCase() === name.toLowerCase());
+            const record = { name, weight, reps, onerm };
+            if (existingIdx >= 0) state.records[existingIdx] = record;
+            else state.records.push(record);
+
+            saveAppData();
+            closeAddRecordModal();
+            renderRecords();
+            showToast(existingIdx >= 0 ? "Record mis à jour !" : "Record personnel enregistré avec succès !");
+        }
+
+        async function deleteRecord(idx) {
+            const rec = state.records[idx];
+            if (!rec) return;
+            if (!(await confirmDialog(`Supprimer le record « ${rec.name} » ?`, 'Supprimer'))) return;
+            state.records.splice(idx, 1);
+            saveAppData();
+            renderRecords();
+            showToast("Record supprimé.");
+        }
+
+        // ================= ONGLET HISTORIQUE =================
+        const historyOpen = new Set();
+
+        function historyKey(hist, idx) {
+            return hist.id ?? `idx-${idx}`;
+        }
+
+        // "80" -> "80 kg" ; "Poids du corps" -> on n'affiche que les répétitions
+        function formatSetLabel(set) {
+            const reps = String(set.reps ?? '').trim() || '-';
+            const w = String(set.weight ?? '').trim();
+            if (!w || isBodyweightLabel(w)) return reps;
+            const weight = /^\d+([.,]\d+)?$/.test(w) ? `${w} kg` : w;
+            return `${weight} × ${reps}`;
+        }
+
+        function toggleHistoryDetails(idx) {
+            const hist = state.history[idx];
+            if (!hist) return;
+            const key = historyKey(hist, idx);
+            if (historyOpen.has(key)) historyOpen.delete(key);
+            else historyOpen.add(key);
+            renderHistory();
+        }
+
+        function renderHistory() {
+            const listContainer = document.getElementById('history-list');
+            listContainer.innerHTML = '';
+
+            if (state.history.length === 0) {
+                listContainer.innerHTML = `<div class="py-12 text-center text-slate-500 text-sm">Aucun historique d'entraînement pour le moment.</div>`;
+                return;
+            }
+
+            state.history.forEach((hist, idx) => {
+                const hasDetails = Array.isArray(hist.exercises) && hist.exercises.length > 0;
+                const isOpen = hasDetails && historyOpen.has(historyKey(hist, idx));
+
+                const progressHtml = hist.setsTotal
+                    ? `<span><i class="fa-solid fa-list-check mr-1"></i><strong class="text-slate-200">${hist.setsDone}/${hist.setsTotal}</strong> séries</span>`
+                    : '';
+
+                const detailsHtml = isOpen ? `
+                    <div class="bg-slate-950/60 border border-slate-800/80 rounded-xl px-4 py-2">
+                        ${hist.exercises.map(ex => `
+                            <div class="py-2 border-b border-slate-800/60 last:border-0">
+                                <div class="text-xs font-semibold text-slate-200 mb-1.5">${escapeHtml(ex.name)}</div>
+                                <div class="flex flex-wrap gap-1.5">
+                                    ${ex.sets.map((st, i) => `<span class="px-2 py-1 rounded-lg text-[11px] font-mono border ${st.completed ? 'bg-emerald-500/10 text-emerald-300 border-emerald-500/20' : 'bg-slate-950 text-slate-500 border-slate-800'}">${i + 1}. ${escapeHtml(formatSetLabel(st))}</span>`).join('')}
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                ` : '';
+
+                const actionsHtml = hasDetails ? `
+                    <button onclick="toggleHistoryDetails(${idx})" aria-expanded="${isOpen}" class="px-3 py-2 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 transition-all">
+                        <i class="fa-solid ${isOpen ? 'fa-chevron-up' : 'fa-chevron-down'} mr-1.5"></i>Détails
+                    </button>
+                    <button onclick="startWorkoutFromHistory(${idx})" class="px-3 py-2 rounded-lg text-xs font-semibold bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/20 transition-all">
+                        <i class="fa-solid fa-rotate-right mr-1.5"></i>Refaire
+                    </button>
+                ` : '';
+
+                const item = document.createElement('div');
+                item.className = "bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl space-y-4";
+                item.innerHTML = `
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <div class="flex items-start space-x-4">
+                            <div class="w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center flex-shrink-0">
+                                <i class="fa-solid fa-circle-check text-lg"></i>
+                            </div>
+                            <div>
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <h3 class="text-base font-bold text-white">${escapeHtml(hist.title)}</h3>
+                                    <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-slate-800 text-slate-300">${escapeHtml(hist.category)}</span>
+                                </div>
+                                <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-slate-400 mt-1">
+                                    <span><i class="fa-regular fa-calendar mr-1"></i>${escapeHtml(hist.date)}</span>
+                                    <span><i class="fa-solid fa-stopwatch mr-1"></i>Durée : <strong class="text-slate-200">${escapeHtml(hist.duration)}</strong></span>
+                                    <span><i class="fa-solid fa-dumbbell mr-1"></i>${hist.exercisesCount} mouvements</span>
+                                    ${progressHtml}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 self-end sm:self-center">
+                            ${actionsHtml}
+                            <button onclick="deleteHistoryItem(${idx})" aria-label="Supprimer cette séance" class="text-slate-500 hover:text-red-400 p-2 rounded-lg transition-colors">
+                                <i class="fa-solid fa-trash text-sm"></i>
+                            </button>
+                        </div>
+                    </div>
+                    ${detailsHtml}
+                `;
+                listContainer.appendChild(item);
+            });
+        }
+
+        function deleteHistoryItem(idx) {
+            state.history.splice(idx, 1);
+            saveAppData();
+            renderHistory();
+            showToast("Séance supprimée de l'historique.");
+        }
+
+        async function clearHistory() {
+            if (await confirmDialog("Voulez-vous vraiment effacer tout l'historique ?", 'Tout effacer')) {
+                state.history = [];
+                saveAppData();
+                renderHistory();
+                showToast("Historique vidé.");
+            }
+        }
+
+        // ================= ONGLET RÉGLAGES (Export/Import/Reset) =================
+        function exportDataJson() {
+            const payload = {
+                version: 1,
+                exportedAt: new Date().toISOString(),
+                programs: state.programs,
+                records: state.records,
+                history: state.history
+            };
+            const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const dlAnchor = document.createElement('a');
+            dlAnchor.href = url;
+            dlAnchor.download = `fitpulse_backup_${new Date().toISOString().slice(0, 10)}.json`;
+            document.body.appendChild(dlAnchor);
+            dlAnchor.click();
+            dlAnchor.remove();
+            setTimeout(() => URL.revokeObjectURL(url), 1000);
+            showToast("Export JSON réussi !");
+        }
+
+        function importDataJson(event) {
+            const input = event.target;
+            const file = input.files && input.files[0];
+            if (!file) return;
+
+            if (file.size > 5 * 1024 * 1024) {
+                showToast("Fichier trop volumineux (5 Mo maximum).", true);
+                input.value = '';
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onerror = () => {
+                showToast("Impossible de lire le fichier.", true);
+                input.value = '';
+            };
+            reader.onload = async e => {
+                try {
+                    const parsed = JSON.parse(e.target.result);
+                    const programs = sanitizePrograms(parsed.programs);
+                    const records = sanitizeRecords(parsed.records);
+                    const history = sanitizeHistory(parsed.history);
+                    if (!programs || !records || !history) throw new Error("Format invalide");
+
+                    if (!(await confirmDialog(`Importer ${programs.length} programme(s), ${records.length} record(s) et ${history.length} séance(s) ?\nVos données actuelles seront remplacées.`, 'Importer', false))) return;
+
+                    state.programs = programs.length ? programs : deepClone(DEFAULT_PROGRAMS);
+                    state.records = records;
+                    state.history = history;
+                    saveAppData();
+                    filterPrograms('Tous');
+                    switchTab('programmes');
+                    showToast("Données importées avec succès !");
+                } catch (err) {
+                    console.warn("Import JSON échoué :", err);
+                    showToast("Erreur lors de l'import : fichier JSON invalide ou au mauvais format.", true);
+                } finally {
+                    input.value = ''; // permet de réimporter le même fichier
+                }
+            };
+            reader.readAsText(file, "UTF-8");
+        }
+
+        async function resetAppToFactory() {
+            if (await confirmDialog("Attention : Cette action va réinitialiser toute l'application et supprimer vos données personnalisées. Continuer ?", 'Réinitialiser')) {
+                stopAllTimers();
+                // On ne supprime que les clés de l'application (pas tout le localStorage du site)
+                Object.values(STORAGE_KEYS).forEach(key => {
+                    try { localStorage.removeItem(key); } catch (e) { /* ignoré */ }
+                });
+                state.activeSession = null;
+                loadAppData();
+                filterPrograms('Tous');
+                switchTab('programmes');
+                showToast("Application réinitialisée.");
+            }
+        }
+
+        // ================= INITIALISATION AU CHARGEMENT =================
+        window.addEventListener('DOMContentLoaded', () => {
+            loadAppData();
+            renderPrograms();
+            updateActiveBadge();
+
+            // Reprise automatique du chrono si une séance était en cours avant le rechargement
+            if (state.activeSession && state.activeSession.running) runSessionTimer();
+
+            // Modale record : Échap pour fermer, Entrée pour valider
+            document.addEventListener('keydown', e => {
+                if (confirmResolver && e.key === 'Escape') { resolveConfirm(false); return; }
+                const modal = document.getElementById('record-modal');
+                if (modal.classList.contains('hidden')) return;
+                if (e.key === 'Escape') closeAddRecordModal();
+                if (e.key === 'Enter' && e.target.tagName === 'INPUT') {
+                    e.preventDefault();
+                    saveRecord();
+                }
+            });
+
+            // Retour sur l'onglet : on resynchronise immédiatement les chronos
+            document.addEventListener('visibilitychange', () => {
+                if (!document.hidden) tickSession();
+            });
+        });
+    </script>
+</body>
+</html>
